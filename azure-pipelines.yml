@@ -1,0 +1,38 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- master
+
+pool: Custom-Pool
+
+stages:
+  - stage: Build
+    displayName: Build Onehealth
+    jobs:
+      - job: DockerBuild
+        steps:
+        - task: Docker@2
+          inputs:
+              containerRegistry: 'docify'
+              repository: 'onehealth'
+              command: 'buildAndPush'
+              Dockerfile: 'Dockerfile'
+  
+  - stage: Deploy
+    displayName: Deploy Onehealth
+    jobs:
+      - job: DeployToAppContainer
+        steps:
+        - task: AzureContainerApps@1
+          inputs:
+            azureSubscription: 'Azure subscription 1(f252d429-48e8-4e30-97be-0b97b6fb24b9)'
+            acrName: 'Docify'
+            imageToDeploy: 'onehealth'
+            containerAppName: 'onehealth-app'
+            resourceGroup: 'Docify-ci'
+            containerAppEnvironment: 'Onehealth-env'
+            targetPort: '8000'
+
