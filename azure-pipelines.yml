@@ -29,6 +29,7 @@ stages:
         - task: AzureContainerApps@1
           inputs:
             azureSubscription: 'Azure subscription 1(f252d429-48e8-4e30-97be-0b97b6fb24b9)'
+            location: West US 2 
             acrName: 'Docify'
             imageToDeploy: 'onehealth'
             containerAppName: 'onehealth-app'
